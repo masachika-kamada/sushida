@@ -1,0 +1,5 @@
+url,http://typingx0.net/sushida/play.html?soundless
+menu_xpath,"//*[@id=""game""]/div"
+start,250 250
+mode_choice,250 300
+play_xpath,/html/body
