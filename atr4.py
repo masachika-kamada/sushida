@@ -7,6 +7,7 @@ import pyocr
 import pyocr.builders
 from time import time
 
+pyocr.tesseract.TESSERACT_CMD = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 tool = pyocr.get_available_tools()[0]
 
 driver = webdriver.Chrome()
@@ -64,7 +65,7 @@ while time() - start < 500:
             else:
                 im.putpixel((i, j), 255)
 
-    # im.save("atr4_pic/end.png")
+    im.save("hoge.png")
 
     text = tool.image_to_string(im, lang='eng', builder=pyocr.builders.TextBuilder())
 

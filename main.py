@@ -32,7 +32,8 @@ mode_y = 300
 
 # スタートボタンをクリックする
 actions = ActionChains(driver)
-actions.move_to_element_with_offset(webgl_element, center_x, start_y).click().perform()
+actions.move_to_element_with_offset(
+    webgl_element, center_x, start_y).click().perform()
 
 print("スタートボタンをクリックしました。")
 
@@ -41,7 +42,8 @@ sleep(1)
 
 # お勧めコースをクリックする
 actions = ActionChains(driver)
-actions.move_to_element_with_offset(webgl_element, center_x, mode_y).click().perform()
+actions.move_to_element_with_offset(
+    webgl_element, center_x, mode_y).click().perform()
 
 print("お勧めコースのボタンをクリックしました。")
 
@@ -79,7 +81,8 @@ while ans_no < 320:
                 im.putpixel((i, j), 255)
 
     # tool で文字を認識させる
-    text = tool.image_to_string(im, lang='eng', builder=pyocr.builders.TextBuilder())
+    text = tool.image_to_string(
+        im, lang='eng', builder=pyocr.builders.TextBuilder())
 
     # text を確認
     print(text)
@@ -91,7 +94,8 @@ while ans_no < 320:
                 text = text.replace(" ", "")
                 if text == 'initouroku':
                     text = 'okiniirinitouroku'
-                    Image.open(fname).crop((200, 228 + 128, 550, 256 + 128)).save('iniM.png')
+                    Image.open(fname).crop(
+                        (200, 228 + 128, 550, 256 + 128)).save('iniM.png')
 
                 if ans_no % 20 == 0:
                     print(ans_no)
@@ -121,18 +125,7 @@ while ans_no < 320:
         mis_no = mis_no + 1
         sleep(cycle_time)
 
-    # element.send_keys('bfgjklmnprdtshuvwyzaiueo?!-,')
-
 input("何か入力してください")
 print(time() - start)
 # ドライバーを閉じる
 driver.quit()
-
-'''
-正解数が340を超えるとバグる
-時間がたちすぎてもバグるっぽい
-440秒当たりが怪しい
-420秒でもエラーが出た
-エラー文が発見されたときに時間を止めてくれるやつを作ったほうがいい
-プラス３秒が来ないように意図的に間違うようにプログラムを改変したらいいかも
-'''
