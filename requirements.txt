@@ -1,0 +1,5 @@
+chromedriver-binary
+Pillow==8.0.1
+pyocr==0.7.2
+selenium==3.141.0
+opencv==3.4.2
