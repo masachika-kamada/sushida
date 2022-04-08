@@ -3,9 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import csv
-from PIL import Image
-import pyocr
-import pyocr.builders
+
 
 
 class ChromeDriver:
@@ -22,8 +20,6 @@ class ChromeDriver:
                 data[row[0]] = row[1]
         file.close()
         self.data = data
-        pyocr.tesseract.TESSERACT_CMD = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
-        self.tool = pyocr.get_available_tools()[0]
 
     def access_sushida(self):
         self.driver.get(self.data["url"])
@@ -41,15 +37,12 @@ class ChromeDriver:
         element = self.driver.find_element_by_xpath(self.data["play_xpath"])
         element.send_keys(" ")
 
-        time.sleep(2)
-
         text_temp = ""
         mis_no = 1
         cycle_time = 5.3
         ans_no = 0
 
-        start = time.time()
-        time.sleep(30)
+        time.sleep(32)
         while ans_no < 320:
             fname = "sample_image.png"
             # スクショをする
