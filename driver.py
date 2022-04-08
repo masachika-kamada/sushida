@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 import csv
-
+from ocr import ocr
 
 
 class ChromeDriver:
@@ -38,76 +38,26 @@ class ChromeDriver:
         element.send_keys(" ")
 
         text_temp = ""
-        mis_no = 1
-        cycle_time = 5.3
-        ans_no = 0
+        n_failure = 0
+        n_ans = 0
 
         time.sleep(32)
-        while ans_no < 320:
-            fname = "sample_image.png"
-            # スクショをする
+        while n_ans < 320:
+            fname = "suhida.jpg"
             self.driver.save_screenshot(fname)
+            res, text = ocr(fname, text_temp, n_failure, self.data["bbox"])
 
-            # 画像をPILのImageを使って読み込む
-            # ローマ字の部分を取り出す
-            im = Image.open(fname).crop((200, 228 + 128, 550, 256 + 128))
+            if not res:
+                time.sleep(self.data["cycle_time"])
+                continue
 
-            # モノクロへ変換
-            im = im.convert("L")
-            for i in range(im.size[0]):
-                for j in range(im.size[1]):
-                    if im.getpixel((i, j)) >= 128:
-                        im.putpixel((i, j), 0)
-                    else:
-                        im.putpixel((i, j), 255)
+            element.send_keys(text)
+            n_ans += 1
+            time.sleep(0.7)
+            text_temp = text
 
-            # tool で文字を認識させる
-            text = self.tool.image_to_string(
-                im, lang='eng', builder=pyocr.builders.TextBuilder())
-
-            # text を確認
-            print(text)
-
-            if text.islower():
-                if text.find(")") == -1:
-                    if text_temp != text:
-                        # 空白なくす
-                        text = text.replace(" ", "")
-                        if text == 'initouroku':
-                            text = 'okiniirinitouroku'
-                            Image.open(fname).crop(
-                                (200, 228 + 128, 550, 256 + 128)).save('iniM.png')
-
-                        if ans_no % 20 == 0:
-                            print(ans_no)
-
-                        # 文字を入力させる
-                        element.send_keys(text)
-                        ans_no = ans_no + 1
-                        time.sleep(0.7)
-
-                    else:
-                        print("M")
-                        im.save('mistakes/pic_%02d.png' % mis_no)
-                        mis_no = mis_no + 1
-                        time.sleep(cycle_time)
-
-                else:
-                    print("S")
-                    im.save('mistakes/pic_%02d.png' % mis_no)
-                    mis_no = mis_no + 1
-                    time.sleep(cycle_time)
-
-                text_temp = text
-
-            else:
-                print("X")
-                im.save('mistakes/pic_%02d.png' % mis_no)
-                mis_no = mis_no + 1
-                time.sleep(cycle_time)
+            if n_ans % 20 == 0:
+                print(n_ans)
 
         input("何か入力してください")
         self.driver.quit()
-
-    def send_key(self, xpath, key):
-        self.driver.find_element_by_xpath(xpath).send_keys(key)
