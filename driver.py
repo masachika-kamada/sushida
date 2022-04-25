@@ -43,7 +43,7 @@ class ChromeDriver:
 
         time.sleep(32)
         while n_ans < 320:
-            fname = "suhida.jpg"
+            fname = "sushida.jpg"
             self.driver.save_screenshot(fname)
             res, text = ocr(fname, text_temp, n_failure, self.data["bbox"])
 
